@@ -1,8 +1,36 @@
 from flask import Flask, render_template, url_for, flash, redirect
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 from forms import RegistrationForm,LoginForm
 app = Flask(__name__)
 
 app.config['SECRET_KEY']  = 'd4ab9a97f62ce0cabb424ff26d23d6ec'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db= SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), unique=True, nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+
+    def __repr__(self):
+        return (f"User('{self.username}', '{self.email}', '{self.image_file})")
+    
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    date_posted = db.Column(db.DateTime,nullable=False, default = datetime.utcnow)
+
+    def __repr__(self):
+        return (f"User('{self.username}', '{self.email}', '{self.image_file})")
+        
+
+    
 
 posts = [
     {'author' : 'Cosmas',
@@ -13,7 +41,7 @@ posts = [
         {
         'author' : 'Albert',
         'title' : 'Second Blog',
-        'content' : 'You can click on the ‘item to generate’ column and select the format you want content in.Below that, you can select if you want an HTML tag in your content or notAfter that, you can choose how many paragraphs you want in the ‘how many items to generate’ column.Then, you can choose the minimum and maximum words you want per sentence.',
+        'content' : 'You can click on the "item to generate" column and select the format you want content in.Below that, you can select if you want an HTML tag in your content or notAfter that, you can choose how many paragraphs you want in the ‘how many items to generate’ column.Then, you can choose the minimum and maximum words you want per sentence.',
         'post_date' : 'Sept 9, 2024'  
         },
         {
@@ -51,7 +79,7 @@ def register():
 @app.route('/LoginForm')
 def login():
     form = LoginForm()
-    return render_template(login.html, title = 'Login', form=form)
+    return render_template('login.html', title = 'Login', form=form)
 
 
 if __name__=='__main__':
