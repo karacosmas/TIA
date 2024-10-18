@@ -26,10 +26,11 @@
                                 {{ form.confirm_password.label(class="form-control-label") }}
                                 {{ form.confirm_password(class="form-control form-control-lg") }}
                         </div>
-                        <div class>
-                               
+                        <p>
+                                <div class>
                                 {{form.submit(class="btn btn-outline-info")}}
-                        </div>
+                                 </div> 
+                        </p>
                 </fieldset>   
             </form>
             
@@ -38,3 +39,4 @@
                  <small class="text-muted"> Already have an account? <a class="ml-2" href="{{url_for('login')}}" >Sign In</a></small>
         </div>
 {% endblock content %} 
+
